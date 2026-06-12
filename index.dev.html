@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2026 世界杯预测与赛程分析中心 - Nginx 反代导航</title>
+  <title>2026 世界杯预测与赛程分析中心 - 本地开发导航</title>
   <meta name="description" content="比较和导航由不同 AI 辅助工具（Antigravity、Claude Code、Codex）开发的 2026 世界杯预测与赛程分析系统。">
   
   <script>
     // ==================================================
-    // ⚙️ 配置您的跳转链接 (Nginx 子路径反代模式)
-    // 您可以在这里直接修改各个服务的子路径或相对路径
+    // ⚙️ 配置您的跳转链接 (本地独立端口模式)
+    // 您可以在这里直接修改各个服务的 URL
     // ==================================================
-    const ANTIGRAVITY_URL = "/antigravity/";
-    const CLAUDE_URL      = "/claude/";
-    const CODEX_URL       = "/codex/";
+    const ANTIGRAVITY_URL = "http://localhost:3001";
+    const CLAUDE_URL      = "http://localhost:3002";
+    const CODEX_URL       = "http://localhost:3003";
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,11 +153,11 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      background: rgba(242, 153, 74, 0.1);
-      color: var(--color-claude);
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--color-antigravity);
       padding: 5px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(242, 153, 74, 0.2);
+      border: 1px solid rgba(0, 242, 254, 0.2);
     }
 
     .github-badge {
@@ -292,8 +292,8 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #3b82f6;
-      box-shadow: 0 0 8px #3b82f6;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
     }
 
     /* Prediction Section */
@@ -556,9 +556,10 @@
   <header>
     <div class="header-logo">2026 FIFA World Cup</div>
     <h1>世界杯预测与赛程分析中心</h1>
-    <div class="subtitle">AI 模型驱动 of the 2026 美加墨世界杯多视角预测及赛程对照导航门户</div>
+    <div class="subtitle">AI 模型驱动的 2026 美加墨世界杯多视角预测及赛程对照导航门户</div>
     
     <div class="header-badges">
+      <div class="mode-badge">当前模式: 本地独立端口 (Dev)</div>
       <a href="https://github.com/itszm/worldcup2026-prediction-compatition" target="_blank" class="github-badge">
         <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
         <span>GitHub</span>
@@ -576,7 +577,7 @@
         </div>
         <div class="status-badge">
           <span class="status-dot"></span>
-          <span id="port-label-ag">Path Proxy</span>
+          <span id="port-label-ag">Port 3001</span>
         </div>
       </div>
 
@@ -664,7 +665,7 @@
         </div>
         <div class="status-badge">
           <span class="status-dot"></span>
-          <span id="port-label-claude">Path Proxy</span>
+          <span id="port-label-claude">Port 3002</span>
         </div>
       </div>
 
@@ -752,7 +753,7 @@
         </div>
         <div class="status-badge">
           <span class="status-dot"></span>
-          <span id="port-label-codex">Path Proxy</span>
+          <span id="port-label-codex">Port 3003</span>
         </div>
       </div>
 
@@ -833,7 +834,7 @@
   </main>
 
   <footer>
-    <p>© 2026 FIFA World Cup Predictions Hub. Configured for Nginx Subpath proxying.</p>
+    <p>© 2026 FIFA World Cup Predictions Hub. Designed for local developer experience.</p>
     <p style="margin-top: 8px;"><a href="https://github.com/itszm/worldcup2026-prediction-compatition" target="_blank">GitHub: itszm/worldcup2026-prediction-compatition</a></p>
   </footer>
 
@@ -842,6 +843,20 @@
     document.getElementById('link-antigravity').setAttribute('href', ANTIGRAVITY_URL);
     document.getElementById('link-claude').setAttribute('href', CLAUDE_URL);
     document.getElementById('link-codex').setAttribute('href', CODEX_URL);
+    
+    // Attempt to extract and show clean labels based on configuration values
+    try {
+      const u1 = new URL(ANTIGRAVITY_URL, window.location.href);
+      if (u1.port) document.getElementById('port-label-ag').textContent = "Port " + u1.port;
+    } catch(e) {}
+    try {
+      const u2 = new URL(CLAUDE_URL, window.location.href);
+      if (u2.port) document.getElementById('port-label-claude').textContent = "Port " + u2.port;
+    } catch(e) {}
+    try {
+      const u3 = new URL(CODEX_URL, window.location.href);
+      if (u3.port) document.getElementById('port-label-codex').textContent = "Port " + u3.port;
+    } catch(e) {}
   </script>
 </body>
 </html>
