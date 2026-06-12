@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+:root {
+  --background: #060a13;
+  --foreground: #e2e8f0;
+  --line: rgba(148, 163, 184, 0.35);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(1100px 560px at 18% -8%, rgba(16, 185, 129, 0.13), transparent 70%),
+    radial-gradient(900px 480px at 82% -4%, rgba(59, 130, 246, 0.12), transparent 70%),
+    radial-gradient(800px 500px at 50% 110%, rgba(244, 63, 94, 0.07), transparent 70%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* ============ 对阵图连接线 ============ */
+/* 列由若干 .bcell 等高单元组成;相邻两单元(p1/p2)汇入下一轮一个单元。
+   横线由 ::after 画在单元左右内边距内,竖线由 ::before 画在列边缘,
+   接收方卡片(.recv-l / .recv-r)再画一段入线,与竖线在列边界衔接。 */
+
+.bcell {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 7px 16px;
+  min-width: 0;
+}
+
+/* 出线(横) */
+.bcell.feed-r::after,
+.bcell.feed-l::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  width: 16px;
+  height: 2px;
+  background: var(--line);
+}
+.bcell.feed-r::after { right: 0; }
+.bcell.feed-l::after { left: 0; }
+
+/* 半决赛 → 决赛:单线渐隐 */
+.bcell.solo::after { width: 24px; }
+.bcell.feed-r.solo::after { background: linear-gradient(to right, var(--line), transparent); }
+.bcell.feed-l.solo::after { background: linear-gradient(to left, var(--line), transparent); }
+
+/* 配对竖线:p1 向下、p2 向上,二者在单元交界处相连 */
+.bcell.p1::before,
+.bcell.p2::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  background: var(--line);
+}
+.bcell.feed-r.p1::before { right: 0; top: 50%; bottom: -1px; }
+.bcell.feed-r.p2::before { right: 0; top: -1px; bottom: 50%; }
+.bcell.feed-l.p1::before { left: 0; top: 50%; bottom: -1px; }
+.bcell.feed-l.p2::before { left: 0; top: -1px; bottom: 50%; }
+
+/* 入线(画在卡片上,延伸进单元内边距) */
+.bcard { position: relative; }
+.bcard.recv-l::before,
+.bcard.recv-r::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  width: 16px;
+  height: 2px;
+  background: var(--line);
+}
+.bcard.recv-l::before { left: -16px; }
+.bcard.recv-r::before { right: -16px; }
+
+/* 细滚动条 */
+::-webkit-scrollbar { height: 8px; width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.25); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.4); }

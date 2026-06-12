@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 世界杯预测与赛程分析中心 - Nginx 反代导航</title>
+  <meta name="description" content="比较和导航由不同 AI 辅助工具（Antigravity、Claude Code、Codex）开发的 2026 世界杯预测与赛程分析系统。">
+  
+  <script>
+    // ==================================================
+    // ⚙️ 配置您的跳转链接 (Nginx 子路径反代模式)
+    // 您可以在这里直接修改各个服务的子路径或相对路径
+    // ==================================================
+    const ANTIGRAVITY_URL = "/antigravity/";
+    const CLAUDE_URL      = "/claude/";
+    const CODEX_URL       = "/codex/";
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07070e;
+      --bg-stadium: radial-gradient(circle at 50% 30%, #161833 0%, #07070e 70%);
+      --card-bg: rgba(20, 22, 45, 0.45);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --card-border-hover: rgba(255, 255, 255, 0.15);
+      
+      --color-antigravity: #00f2fe;
+      --color-antigravity-rgb: 0, 242, 254;
+      --color-claude: #f2994a;
+      --color-claude-rgb: 242, 153, 74;
+      --color-codex: #00f5a0;
+      --color-codex-rgb: 0, 245, 160;
+      
+      --color-gold: #f2c94c;
+      --text-main: #ffffff;
+      --text-secondary: #9aa5b1;
+      --text-muted: #627d98;
+      
+      --font-outfit: 'Outfit', 'Noto Sans SC', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-dark);
+      background-image: var(--bg-stadium);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-outfit);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Ambient light effects */
+    .ambient-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: 15%;
+      width: 45vw;
+      height: 45vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      top: 40%;
+      right: 10%;
+      width: 40vw;
+      height: 40vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242, 153, 74, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 24px 40px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .header-logo {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-logo::before, .header-logo::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--color-gold));
+    }
+    .header-logo::after {
+      background: linear-gradient(to left, transparent, var(--color-gold));
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, #8ea1b5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto 10px;
+      font-weight: 300;
+    }
+
+    .header-badges {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .mode-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(242, 153, 74, 0.1);
+      color: var(--color-claude);
+      padding: 5px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(242, 153, 74, 0.2);
+    }
+
+    .github-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .github-badge:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Portal Grid */
+    main {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 30px;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Project Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .card.antigravity::before { background: var(--color-antigravity); }
+    .card.claude::before { background: var(--color-claude); }
+    .card.codex::before { background: var(--color-codex); }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card.antigravity:hover {
+      box-shadow: 0 20px 40px rgba(0, 242, 254, 0.06), 0 0 1px 1px rgba(0, 242, 254, 0.2);
+    }
+
+    .card.claude:hover {
+      box-shadow: 0 20px 40px rgba(242, 153, 74, 0.05), 0 0 1px 1px rgba(242, 153, 74, 0.2);
+    }
+
+    .card.codex:hover {
+      box-shadow: 0 20px 40px rgba(0, 245, 160, 0.06), 0 0 1px 1px rgba(0, 245, 160, 0.2);
+    }
+
+    /* Card Header */
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .tool-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .model-name {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      margin-top: 2px;
+    }
+
+    .card.antigravity .model-name { color: var(--color-antigravity); }
+    .card.claude .model-name { color: var(--color-claude); }
+    .card.codex .model-name { color: var(--color-codex); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #3b82f6;
+      box-shadow: 0 0 8px #3b82f6;
+    }
+
+    /* Prediction Section */
+    .pred-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .pred-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .champion-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .champion-flag {
+      font-size: 32px;
+      line-height: 1;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    }
+
+    .champion-detail {
+      flex-grow: 1;
+    }
+
+    .champion-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .champion-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .champion-prob {
+      text-align: right;
+    }
+
+    .prob-num {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .card.antigravity .prob-num { color: var(--color-antigravity); }
+    .card.claude .prob-num { color: var(--color-claude); }
+    .card.codex .prob-num { color: var(--color-codex); }
+
+    .prob-unit {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-left: 1px;
+    }
+
+    /* Contenders List */
+    .contenders-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .contender-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .contender-flag {
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .contender-name {
+      width: 70px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .contender-bar-wrapper {
+      flex-grow: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .contender-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease-out;
+    }
+
+    .card.antigravity .contender-bar { background: linear-gradient(to right, #0099ff, var(--color-antigravity)); }
+    .card.claude .contender-bar { background: linear-gradient(to right, #b83b5e, var(--color-claude)); }
+    .card.codex .contender-bar { background: linear-gradient(to right, #0575e6, var(--color-codex)); }
+
+    .contender-val {
+      width: 45px;
+      text-align: right;
+      font-weight: 700;
+      font-family: var(--font-outfit);
+      color: var(--text-main);
+    }
+
+    /* Features List */
+    .features-section {
+      margin-top: 12px;
+      flex-grow: 1;
+    }
+
+    .features-section h3 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+    }
+
+    .features-list {
+      list-style: none;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .features-list li {
+      margin-bottom: 8px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .features-list li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+      top: 1px;
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    /* Open Button */
+    .open-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 30px;
+      padding: 16px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .card.antigravity .open-btn {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 153, 255, 0.05) 100%);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--color-antigravity);
+    }
+
+    .card.claude .open-btn {
+      background: linear-gradient(135deg, rgba(242, 153, 74, 0.15) 0%, rgba(184, 59, 94, 0.05) 100%);
+      border: 1px solid rgba(242, 153, 74, 0.3);
+      color: var(--color-claude);
+    }
+
+    .card.codex .open-btn {
+      background: linear-gradient(135deg, rgba(0, 245, 160, 0.15) 0%, rgba(5, 117, 230, 0.05) 100%);
+      border: 1px solid rgba(0, 245, 160, 0.3);
+      color: var(--color-codex);
+    }
+
+    .card.antigravity .open-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.25) 0%, rgba(0, 153, 255, 0.1) 100%);
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+
+    .card.claude .open-btn:hover {
+      background: linear-gradient(135deg, rgba(242, 153, 74, 0.25) 0%, rgba(184, 59, 94, 0.1) 100%);
+      box-shadow: 0 4px 15px rgba(242, 153, 74, 0.2);
+    }
+
+    .card.codex .open-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 245, 160, 0.25) 0%, rgba(5, 117, 230, 0.1) 100%);
+      box-shadow: 0 4px 15px rgba(0, 245, 160, 0.2);
+    }
+
+    .btn-arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .open-btn:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.02);
+      z-index: 10;
+      position: relative;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 40px 16px 20px;
+      }
+      main {
+        grid-template-columns: 1fr;
+        padding: 0 16px 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <header>
+    <div class="header-logo">2026 FIFA World Cup</div>
+    <h1>世界杯预测与赛程分析中心</h1>
+    <div class="subtitle">AI 模型驱动 of the 2026 美加墨世界杯多视角预测及赛程对照导航门户</div>
+    
+    <div class="header-badges">
+      <div class="mode-badge">当前模式: Nginx 子路径反代 (Subpath)</div>
+      <a href="https://github.com/itszm/worldcup2026-prediction-compatition" target="_blank" class="github-badge">
+        <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Card 1: Antigravity -->
+    <section class="card antigravity">
+      <div class="card-meta">
+        <div class="tool-info">
+          <div class="tool-name">Antigravity</div>
+          <div class="model-name">Gemini 3.5 Flash (High)</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span id="port-label-ag">Path Proxy</span>
+        </div>
+      </div>
+
+      <!-- Champion Prediction -->
+      <div class="pred-section">
+        <div class="pred-label">预测冠军</div>
+        <div class="champion-row">
+          <div class="champion-flag">🇦🇷</div>
+          <div class="champion-detail">
+            <div class="champion-name">阿根廷</div>
+            <div class="champion-desc">卫冕冠军 · 攻守底蕴最为稳固</div>
+          </div>
+          <div class="champion-prob">
+            <span class="prob-num">15.0</span><span class="prob-unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Contenders -->
+      <div class="contenders-title">
+        <span>重点夺冠热门</span>
+        <span>概率</span>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇦🇷</div>
+        <div class="contender-name">阿根廷</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 100%;"></div>
+        </div>
+        <div class="contender-val">15.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇧🇷</div>
+        <div class="contender-name">巴西</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 86.6%;"></div>
+        </div>
+        <div class="contender-val">13.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇫🇷</div>
+        <div class="contender-name">法国</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 80.0%;"></div>
+        </div>
+        <div class="contender-val">12.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+        <div class="contender-name">英格兰</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 66.6%;"></div>
+        </div>
+        <div class="contender-val">10.0%</div>
+      </div>
+
+      <!-- Features -->
+      <div class="features-section">
+        <h3>系统亮点与特色</h3>
+        <ul class="features-list">
+          <li><strong>Elo-based 动态演算法：</strong>结合 FIFA 排名与相对实力差自动演算胜平负概率。</li>
+          <li><strong>小组积分及出线模拟：</strong>动态计算 12 个小组的小组晋级情况与名次。</li>
+          <li><strong>32 强淘汰赛对决模拟：</strong>支持 Monte Carlo 模拟，自动决定淘汰赛路径。</li>
+          <li><strong>赛事评分与反馈：</strong>内置裁判、战术、精彩度多维度交互打分和 MVP 评选。</li>
+        </ul>
+      </div>
+
+      <!-- Link Button -->
+      <a href="#" id="link-antigravity" target="_blank" class="open-btn">
+        <span>进入 Antigravity 预测空间</span>
+        <span class="btn-arrow">→</span>
+      </a>
+    </section>
+
+    <!-- Card 2: Claude Code -->
+    <section class="card claude">
+      <div class="card-meta">
+        <div class="tool-info">
+          <div class="tool-name">Claude Code</div>
+          <div class="model-name">Fable 5 (High)</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span id="port-label-claude">Path Proxy</span>
+        </div>
+      </div>
+
+      <!-- Champion Prediction -->
+      <div class="pred-section">
+        <div class="pred-label">预测冠军 (决赛: 🇪🇸 54% - 46% 🇦🇷)</div>
+        <div class="champion-row">
+          <div class="champion-flag">🇪🇸</div>
+          <div class="champion-detail">
+            <div class="champion-name">西班牙</div>
+            <div class="champion-desc">控球体系成熟 · 黄金一代正值当打</div>
+          </div>
+          <div class="champion-prob">
+            <span class="prob-num">16.5</span><span class="prob-unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Contenders -->
+      <div class="contenders-title">
+        <span>重点夺冠热门</span>
+        <span>概率</span>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇪🇸</div>
+        <div class="contender-name">西班牙</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 100%;"></div>
+        </div>
+        <div class="contender-val">16.5%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇫🇷</div>
+        <div class="contender-name">法国</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 84.8%;"></div>
+        </div>
+        <div class="contender-val">14.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇦🇷</div>
+        <div class="contender-name">阿根廷</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 75.7%;"></div>
+        </div>
+        <div class="contender-val">12.5%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+        <div class="contender-name">英格兰</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 63.6%;"></div>
+        </div>
+        <div class="contender-val">10.5%</div>
+      </div>
+
+      <!-- Features -->
+      <div class="features-section">
+        <h3>系统亮点与特色</h3>
+        <ul class="features-list">
+          <li><strong>官方分组与赛程表：</strong>基于华盛顿抽签的真实完整对阵。</li>
+          <li><strong>预测四强及决赛落位：</strong>精准计算出西班牙、阿根廷、法国、英格兰四强。</li>
+          <li><strong>金靴奖概率雷达：</strong>姆巴佩 (14%)、哈兰德 (11%)、凯恩 (10%) 特色预测。</li>
+          <li><strong>小组晋级概率分布：</strong>可视化直观分析各组晋级淘汰赛的详细概率。</li>
+        </ul>
+      </div>
+
+      <!-- Link Button -->
+      <a href="#" id="link-claude" target="_blank" class="open-btn">
+        <span>进入 Claude Code 预测空间</span>
+        <span class="btn-arrow">→</span>
+      </a>
+    </section>
+
+    <!-- Card 3: Codex -->
+    <section class="card codex">
+      <div class="card-meta">
+        <div class="tool-info">
+          <div class="tool-name">Codex</div>
+          <div class="model-name">GPT 5.5 (High)</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span id="port-label-codex">Path Proxy</span>
+        </div>
+      </div>
+
+      <!-- Champion Prediction -->
+      <div class="pred-section">
+        <div class="pred-label">预测冠军 (决赛: 🇪🇸 2 - 1 🇫🇷)</div>
+        <div class="champion-row">
+          <div class="champion-flag">🇪🇸</div>
+          <div class="champion-detail">
+            <div class="champion-name">西班牙</div>
+            <div class="champion-desc">控球结构最完整 · 年龄曲线最优</div>
+          </div>
+          <div class="champion-prob">
+            <span class="prob-num">19.0</span><span class="prob-unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Contenders -->
+      <div class="contenders-title">
+        <span>重点夺冠热门</span>
+        <span>概率</span>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇪🇸</div>
+        <div class="contender-name">西班牙</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 100%;"></div>
+        </div>
+        <div class="contender-val">19.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇫🇷</div>
+        <div class="contender-name">法国</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 89.4%;"></div>
+        </div>
+        <div class="contender-val">17.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🇦🇷</div>
+        <div class="contender-name">阿根廷</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 73.6%;"></div>
+        </div>
+        <div class="contender-val">14.0%</div>
+      </div>
+      
+      <div class="contender-item">
+        <div class="contender-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+        <div class="contender-name">英格兰</div>
+        <div class="contender-bar-wrapper">
+          <div class="contender-bar" style="width: 68.4%;"></div>
+        </div>
+        <div class="contender-val">13.0%</div>
+      </div>
+
+      <!-- Features -->
+      <div class="features-section">
+        <h3>系统亮点与特色</h3>
+        <ul class="features-list">
+          <li><strong>Match Lab 评分实验室：</strong>独家 5 因子实力加权自选模型。</li>
+          <li><strong>20,000 次 Monte Carlo 模拟：</strong>基于海量计算得出 48 支球队的晋级概率。</li>
+          <li><strong>战胜不确定性路线图：</strong>全树状交互对阵图与淘汰赛每一轮的预测赛果。</li>
+          <li><strong>极致的现代主义版式：</strong>精雕细琢的交互页面与响应式仪表盘。</li>
+        </ul>
+      </div>
+
+      <!-- Link Button -->
+      <a href="#" id="link-codex" target="_blank" class="open-btn">
+        <span>进入 Codex 预测空间</span>
+        <span class="btn-arrow">→</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 FIFA World Cup Predictions Hub. Configured for Nginx Subpath proxying.</p>
+    <p style="margin-top: 8px;"><a href="https://github.com/itszm/worldcup2026-prediction-compatition" target="_blank">GitHub: itszm/worldcup2026-prediction-compatition</a></p>
+  </footer>
+
+  <script>
+    // Automatically apply configuration values
+    document.getElementById('link-antigravity').setAttribute('href', ANTIGRAVITY_URL);
+    document.getElementById('link-claude').setAttribute('href', CLAUDE_URL);
+    document.getElementById('link-codex').setAttribute('href', CODEX_URL);
+  </script>
+</body>
+</html>
