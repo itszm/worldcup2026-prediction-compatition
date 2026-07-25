@@ -193,6 +193,107 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
+    /* Post-tournament Evaluation Banner */
+    .eval-hero-banner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 30px;
+      padding: 0 24px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .eval-card {
+      background: linear-gradient(135deg, rgba(242, 201, 76, 0.12) 0%, rgba(20, 22, 45, 0.75) 100%);
+      border: 1px solid rgba(242, 201, 76, 0.3);
+      border-radius: 24px;
+      padding: 24px 30px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .eval-card:hover {
+      border-color: rgba(242, 201, 76, 0.5);
+      box-shadow: 0 15px 35px rgba(242, 201, 76, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .eval-info {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .eval-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      background: rgba(242, 201, 76, 0.15);
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .eval-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .eval-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .eval-ranking-pill {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    .eval-rank-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .eval-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f2c94c 0%, #f2994a 100%);
+      color: #07070e;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(242, 201, 76, 0.3);
+    }
+
+    .eval-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(242, 201, 76, 0.5);
+      background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+    }
+
     /* Portal Grid */
     main {
       width: 100%;
@@ -568,12 +669,35 @@
     <div class="subtitle">对比不同 AI 辅助编程工具（Antigravity、Claude Code、Codex）所构建模型的赛事预测与实力评估结果</div>
     
     <div class="header-badges">
+      <a href="evaluation.html" class="mode-badge" style="background: rgba(242, 201, 76, 0.15); color: var(--color-gold); border-color: rgba(242, 201, 76, 0.3);">
+        🏆 赛后准确率与评分报告
+      </a>
       <a href="https://github.com/itszm/worldcup2026-prediction-compatition" target="_blank" class="github-badge">
         <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
         <span>GitHub</span>
       </a>
     </div>
   </header>
+
+  <!-- Post-tournament Evaluation Hero Banner -->
+  <section class="eval-hero-banner">
+    <div class="eval-card">
+      <div class="eval-info">
+        <div class="eval-tag">🏆 赛后终极复盘与准确率报告</div>
+        <div class="eval-title">2026 世界杯 AI 预测项目评分与准确率对比</div>
+        <div class="eval-desc">世界杯正赛已圆满落幕！我们基于正赛真实结果，对 Antigravity、Claude Code、Codex 三大 AI 项目的预测模型进行了全方位评分与准确率复盘。</div>
+        <div class="eval-ranking-pill">
+          <div class="eval-rank-item"><span>🥇 第一名：</span><strong style="color:var(--color-gold)">Claude Code (92.9分)</strong></div>
+          <div class="eval-rank-item"><span>🥈 第二名：</span><strong style="color:var(--color-silver)">Codex (90.4分)</strong></div>
+          <div class="eval-rank-item"><span>🥉 第三名：</span><strong style="color:var(--color-bronze)">Antigravity (84.7分)</strong></div>
+        </div>
+      </div>
+      <a href="evaluation.html" class="eval-btn">
+        <span>查看完整评估报告</span>
+        <span>→</span>
+      </a>
+    </div>
+  </section>
 
   <main>
     <!-- Card 1: Antigravity -->

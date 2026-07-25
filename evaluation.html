@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 世界杯 AI 预测准确率与评分报告 - 赛后复盘</title>
+  <meta name="description" content="2026 美加墨世界杯赛后终极复盘：对比评测 Antigravity、Claude Code、Codex 三个 AI 项目的赛事预测准确率与综合评分。">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X8KF1HKTW0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-X8KF1HKTW0');
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07070e;
+      --bg-stadium: radial-gradient(circle at 50% 20%, #161833 0%, #07070e 75%);
+      --card-bg: rgba(20, 22, 45, 0.55);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-hover: rgba(255, 255, 255, 0.18);
+      
+      --color-antigravity: #00f2fe;
+      --color-claude: #f2994a;
+      --color-codex: #00f5a0;
+      --color-gold: #f2c94c;
+      --color-silver: #e0e0e0;
+      --color-bronze: #cd7f32;
+      
+      --text-main: #ffffff;
+      --text-secondary: #9aa5b1;
+      --text-muted: #627d98;
+      
+      --font-outfit: 'Outfit', 'Noto Sans SC', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-dark);
+      background-image: var(--bg-stadium);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-outfit);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Effects */
+    .ambient-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: 10%;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242, 201, 76, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      top: 40%;
+      right: 5%;
+      width: 45vw;
+      height: 45vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242, 153, 74, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top Navigation Header */
+    .nav-bar {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .header-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      background: rgba(242, 201, 76, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(242, 201, 76, 0.25);
+    }
+
+    /* Hero Header */
+    header {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 50px 24px 30px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 20%, #f2c94c 70%, #f2994a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: clamp(1.0rem, 2vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 750px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    /* Container layout */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Podium Section */
+    .podium-section {
+      margin-top: 20px;
+      margin-bottom: 50px;
+    }
+
+    .podium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: flex-end;
+    }
+
+    @media (max-width: 840px) {
+      .podium-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .podium-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .podium-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--card-border-hover);
+    }
+
+    .podium-card.first {
+      border-color: rgba(242, 201, 76, 0.4);
+      background: linear-gradient(180deg, rgba(242, 201, 76, 0.1) 0%, rgba(20, 22, 45, 0.7) 100%);
+      box-shadow: 0 20px 40px rgba(242, 201, 76, 0.1);
+      order: 2;
+    }
+    .podium-card.second {
+      border-color: rgba(224, 224, 224, 0.25);
+      background: linear-gradient(180deg, rgba(224, 224, 224, 0.05) 0%, rgba(20, 22, 45, 0.6) 100%);
+      order: 1;
+    }
+    .podium-card.third {
+      border-color: rgba(205, 127, 50, 0.25);
+      background: linear-gradient(180deg, rgba(205, 127, 50, 0.05) 0%, rgba(20, 22, 45, 0.6) 100%);
+      order: 3;
+    }
+
+    @media (max-width: 840px) {
+      .podium-card.first { order: 1; }
+      .podium-card.second { order: 2; }
+      .podium-card.third { order: 3; }
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .podium-card.first .rank-badge {
+      background: linear-gradient(135deg, #f2c94c 0%, #f2994a 100%);
+      color: #07070e;
+      box-shadow: 0 4px 15px rgba(242, 201, 76, 0.4);
+    }
+    .podium-card.second .rank-badge {
+      background: linear-gradient(135deg, #e0e0e0 0%, #9aa5b1 100%);
+      color: #07070e;
+    }
+    .podium-card.third .rank-badge {
+      background: linear-gradient(135deg, #cd7f32 0%, #8c4a17 100%);
+      color: #ffffff;
+    }
+
+    .podium-tool {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .podium-model {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .podium-score {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .podium-card.first .podium-score { color: var(--color-gold); }
+    .podium-card.second .podium-score { color: var(--color-silver); }
+    .podium-card.third .podium-score { color: var(--color-bronze); }
+
+    .score-unit {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-left: 2px;
+    }
+
+    .podium-highlights {
+      text-align: left;
+      font-size: 13px;
+      color: var(--text-secondary);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .podium-highlights li {
+      list-style: none;
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .podium-highlights li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--color-gold);
+      font-weight: bold;
+    }
+
+    /* Section Component */
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background: var(--color-gold);
+      border-radius: 2px;
+    }
+
+    .content-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 40px;
+    }
+
+    /* Table Styling */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      font-weight: 700;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-rank {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .badge-rank.r1 { background: rgba(242, 201, 76, 0.15); color: var(--color-gold); border: 1px solid rgba(242, 201, 76, 0.3); }
+    .badge-rank.r2 { background: rgba(224, 224, 224, 0.15); color: var(--color-silver); border: 1px solid rgba(224, 224, 224, 0.3); }
+    .badge-rank.r3 { background: rgba(205, 127, 50, 0.15); color: var(--color-bronze); border: 1px solid rgba(205, 127, 50, 0.3); }
+
+    /* Criteria Cards Grid */
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .criteria-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .criteria-weight {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .criteria-name {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .criteria-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Detailed Breakdown Cards */
+    .project-detail-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .project-detail-card.claude { border-left: 4px solid var(--color-claude); }
+    .project-detail-card.codex { border-left: 4px solid var(--color-codex); }
+    .project-detail-card.antigravity { border-left: 4px solid var(--color-antigravity); }
+
+    .detail-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .detail-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .detail-score-tag {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--color-gold);
+    }
+
+    .score-breakdown-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .score-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .score-item-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .detail-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Navigation Link Grid */
+    .app-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .app-nav-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-nav-card:hover {
+      border-color: var(--card-border-hover);
+      transform: translateY(-4px);
+      background: rgba(30, 34, 70, 0.6);
+    }
+
+    .app-nav-name {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .app-nav-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .arrow-icon {
+      font-size: 18px;
+      color: var(--color-gold);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Top Nav Bar -->
+  <div class="nav-bar">
+    <a href="index.html" class="back-btn">
+      <span>← 返回项目导航 Portal</span>
+    </a>
+    <div class="header-tag">2026 世界杯赛后复盘</div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1>2026 世界杯 AI 预测准确率与评分报告</h1>
+    <div class="subtitle">基于正赛真实结果，全方位对比 Antigravity、Claude Code、Codex 三个 AI 预测系统的准确率与算法表现</div>
+  </header>
+
+  <div class="container">
+    <!-- Podium Ranking -->
+    <div class="podium-section">
+      <div class="podium-grid">
+        <!-- 2nd Place: Codex -->
+        <div class="podium-card second">
+          <div class="rank-badge">🥈</div>
+          <div class="podium-tool">Codex</div>
+          <div class="podium-model">GPT 5.5 (High)</div>
+          <div class="podium-score">90.4<span class="score-unit">分</span></div>
+          <ul class="podium-highlights">
+            <li>精准命中冠军 🇪🇸 西班牙 (19.0%)</li>
+            <li>精确预测淘汰赛每场比分 (决赛 2-1)</li>
+            <li>独创 5 因子实力雷达模型</li>
+            <li>四强命中 2/4 (黑马挪威占偏)</li>
+          </ul>
+        </div>
+
+        <!-- 1st Place: Claude Code -->
+        <div class="podium-card first">
+          <div class="rank-badge">🥇</div>
+          <div class="podium-tool">Claude Code</div>
+          <div class="podium-model">Fable 5 (High)</div>
+          <div class="podium-score">92.9<span class="score-unit">分</span></div>
+          <ul class="podium-highlights">
+            <li>精准命中冠军 🇪🇸 西班牙 (16.5%)</li>
+            <li>精准锁定决赛对阵：🇪🇸 西班牙 2-1 🇦🇷 阿根廷</li>
+            <li>四强覆盖率 100% (西/阿/法/英全中)</li>
+            <li>完整推演全部 104 场比赛赛程树</li>
+          </ul>
+        </div>
+
+        <!-- 3rd Place: Antigravity -->
+        <div class="podium-card third">
+          <div class="rank-badge">🥉</div>
+          <div class="podium-tool">Antigravity</div>
+          <div class="podium-model">Gemini 3.5 Flash (High)</div>
+          <div class="podium-score">84.7<span class="score-unit">分</span></div>
+          <ul class="podium-highlights">
+            <li>首选卫冕冠军 🇦🇷 阿根廷 (15.0%)</li>
+            <li>全动态 Elo-based 数理演算法</li>
+            <li>最高交互性：支持比赛模拟与评分</li>
+            <li>可实时自定淘汰赛推演路线</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evaluation Criteria Section -->
+    <div class="section-title">评分维度与评价体系</div>
+    <div class="criteria-grid">
+      <div class="criteria-card">
+        <div class="criteria-weight">权重 30%</div>
+        <div class="criteria-name">🏆 冠军与冠亚军预测</div>
+        <div class="criteria-desc">考量模型是否成功预测冠军队伍、亚军队伍以及决赛的具体对阵组合。</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-weight">权重 25%</div>
+        <div class="criteria-name">🌳 淘汰赛树与四强覆盖</div>
+        <div class="criteria-desc">评估 32 强至半决赛（Final Four）各轮次的球队归位与赛程路线匹配度。</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-weight">权重 20%</div>
+        <div class="criteria-name">📊 小组赛出线概率拟合</div>
+        <div class="criteria-desc">评估对 12 个小组共 48 支球队的晋级率、小组头名及名次拟合科学性。</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-weight">权重 15%</div>
+        <div class="criteria-name">🔬 模型科学性与深度</div>
+        <div class="criteria-desc">考察算法架构（如 Elo 计算、多因子加权、蒙特卡洛模拟）的技术严谨度。</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-weight">权重 10%</div>
+        <div class="criteria-name">🎮 动态调优与交互体验</div>
+        <div class="criteria-desc">评价系统是否支持实时比分输入、参数调优、模拟推演与动态仪表盘呈现。</div>
+      </div>
+    </div>
+
+    <!-- Master Comparison Table Section -->
+    <div class="section-title">综合对比与能力矩阵</div>
+    <div class="content-box">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>综合排名</th>
+              <th>AI 项目 / 模型</th>
+              <th>预测冠军</th>
+              <th>预测决赛对阵</th>
+              <th>四强命中率</th>
+              <th>核心预测机制</th>
+              <th>综合得分</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-rank r1">🥇 第 1 名</span></td>
+              <td><strong>Claude Code</strong><br><small style="color:var(--text-muted)">Fable 5 (High)</small></td>
+              <td><strong style="color:var(--color-gold)">🇪🇸 西班牙 (16.5%)</strong></td>
+              <td>🇪🇸 西班牙 2-1 🇦🇷 阿根廷</td>
+              <td><strong style="color:var(--color-gold)">4/4 (100%)</strong></td>
+              <td>官方分组完全匹配 + 完备概率树</td>
+              <td><strong style="color:var(--color-gold); font-size:16px;">92.9 分</strong></td>
+            </tr>
+            <tr>
+              <td><span class="badge-rank r2">🥈 第 2 名</span></td>
+              <td><strong>Codex</strong><br><small style="color:var(--text-muted)">GPT 5.5 (High)</small></td>
+              <td><strong style="color:var(--color-gold)">🇪🇸 西班牙 (19.0%)</strong></td>
+              <td>🇪🇸 西班牙 2-1 🇫🇷 法国</td>
+              <td>2/4 (50%)</td>
+              <td>5 因子实力雷达 + 精确比分推演</td>
+              <td><strong style="color:var(--color-silver); font-size:16px;">90.4 分</strong></td>
+            </tr>
+            <tr>
+              <td><span class="badge-rank r3">🥉 第 3 名</span></td>
+              <td><strong>Antigravity</strong><br><small style="color:var(--text-muted)">Gemini 3.5 Flash (High)</small></td>
+              <td>🇦🇷 阿根廷 (15.0%)</td>
+              <td>动态生成 (首选 阿/巴/法)</td>
+              <td>概率拟合</td>
+              <td>Elo 动态公式 + 比赛评分模拟器</td>
+              <td><strong style="color:var(--color-bronze); font-size:16px;">84.7 分</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Detailed Analysis per Project -->
+    <div class="section-title">各项目详细评析与得分拆解</div>
+
+    <!-- Claude Code Detail -->
+    <div class="project-detail-card claude">
+      <div class="detail-head">
+        <div class="detail-title">🥇 Claude Code (Fable 5) — 预测精准度之王</div>
+        <div class="detail-score-tag">92.9 / 100 分</div>
+      </div>
+      <div class="score-breakdown-list">
+        <div class="score-item">冠军预测: <div class="score-item-val">98 分</div></div>
+        <div class="score-item">淘汰赛树: <div class="score-item-val">95 分</div></div>
+        <div class="score-item">小组出线: <div class="score-item-val">90 分</div></div>
+        <div class="score-item">模型科学度: <div class="score-item-val">88 分</div></div>
+        <div class="score-item">交互体验: <div class="score-item-val">88 分</div></div>
+      </div>
+      <div class="detail-text">
+        <p><strong>评析：</strong>Claude Code 在本次世界杯预测中展现了极高的战略全局观。模型准确预测了西班牙队的夺冠（16.5% 夺冠概率），并成功锁定了西班牙与阿根廷的决赛巅峰对决（预测比分 2-1）。更令人惊叹的是，Claude 预设的四强名单（西班牙、阿根廷、法国、英格兰）与正赛实际四强完全一致，在淘汰赛树的推演闭环上拿下了全场最高分。</p>
+      </div>
+    </div>
+
+    <!-- Codex Detail -->
+    <div class="project-detail-card codex">
+      <div class="detail-head">
+        <div class="detail-title">🥈 Codex (GPT 5.5) — 细节比分与多因子分析大师</div>
+        <div class="detail-score-tag">90.4 / 100 分</div>
+      </div>
+      <div class="score-breakdown-list">
+        <div class="score-item">冠军预测: <div class="score-item-val">95 分</div></div>
+        <div class="score-item">淘汰赛树: <div class="score-item-val">86 分</div></div>
+        <div class="score-item">小组出线: <div class="score-item-val">88 分</div></div>
+        <div class="score-item">模型科学度: <div class="score-item-val">92 分</div></div>
+        <div class="score-item">交互体验: <div class="score-item-val">92 分</div></div>
+      </div>
+      <div class="detail-text">
+        <p><strong>评析：</strong>Codex 提出了独具一格的 5 因子加权模型（近期状态 25%、进攻上限 25%、防守稳定 20%、中场控制 15%、赛事情境 15%），并打造了极具技术感的 Match Lab 实验室。Codex 准确预测了西班牙夺冠（19.0% 高胜率），且为从 32 强到决赛的每一场比赛都给出了精确比分。虽然四强预测中对黑马挪威队的高估稍微拉低了方差得分，但整体分析深度与比分推演表现优异。</p>
+      </div>
+    </div>
+
+    <!-- Antigravity Detail -->
+    <div class="project-detail-card antigravity">
+      <div class="detail-head">
+        <div class="detail-title">🥉 Antigravity (Gemini 3.5 Flash) — 动态模拟与数理交互先锋</div>
+        <div class="detail-score-tag">84.7 / 100 分</div>
+      </div>
+      <div class="score-breakdown-list">
+        <div class="score-item">冠军预测: <div class="score-item-val">78 分</div></div>
+        <div class="score-item">淘汰赛树: <div class="score-item-val">82 分</div></div>
+        <div class="score-item">小组出线: <div class="score-item-val">86 分</div></div>
+        <div class="score-item">模型科学度: <div class="score-item-val">94 分</div></div>
+        <div class="score-item">交互体验: <div class="score-item-val">95 分</div></div>
+      </div>
+      <div class="detail-text">
+        <p><strong>评析：</strong>Antigravity 侧重于构建一个完全动态、数据驱动的概率演算与模拟引擎。模型基于标准的 Elo 相对实力公式计算出比赛胜平负分布，首选冠军为卫冕冠军阿根廷（15.0%），西班牙以 9.0% 位列第五。虽然静态冠军预测略保守，但 Antigravity 拥有全场最强大的交互性：支持实时模拟比赛比分、自定义淘汰赛 Bracket 走向，并包含裁判/战术/MVP 的多维度赛后打分系统。</p>
+      </div>
+    </div>
+
+    <!-- Direct Sub-App Navigation Links -->
+    <div class="section-title">体验各个 AI 预测项目</div>
+    <div class="app-nav-grid">
+      <a href="/claude/" target="_blank" class="app-nav-card">
+        <div>
+          <div class="app-nav-name">🟠 Claude Code 预测空间</div>
+          <div class="app-nav-desc">查看冠军西班牙与 100% 命中四强的完整赛程树</div>
+        </div>
+        <div class="arrow-icon">→</div>
+      </a>
+
+      <a href="/codex/" target="_blank" class="app-nav-card">
+        <div>
+          <div class="app-nav-name">🟢 Codex 预测空间</div>
+          <div class="app-nav-desc">体验 5 因子 Match Lab 实验室与淘汰赛比分推演</div>
+        </div>
+        <div class="arrow-icon">→</div>
+      </a>
+
+      <a href="/antigravity/" target="_blank" class="app-nav-card">
+        <div>
+          <div class="app-nav-name">🌌 Antigravity 预测空间</div>
+          <div class="app-nav-desc">体验动态 Elo 数理演算法与交互式比赛模拟器</div>
+        </div>
+        <div class="arrow-icon">→</div>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 世界杯预测与赛程对照中心 · 赛后复盘分析报告</p>
+    <p style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+      本系统由 AI 辅助编程生成，所有数据与预测基于 2026 美加墨世界杯模型对测与统计。
+    </p>
+  </footer>
+</body>
+</html>
